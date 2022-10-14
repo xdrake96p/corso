@@ -46,10 +46,14 @@ public class TheMovieDBController {
         return moviesService.searchingMovies(name);
     }
     @CrossOrigin(origins="*")
-    @GetMapping("/user")
+    @GetMapping("/user")//ritorna tutti gli utenti
     public List<Utente> getUtenti(){
     	return utenteRepository.findAll();
     }
-   
+    @CrossOrigin(origins="*")
+    @GetMapping("/user/{id}")//ritorna il singolo utente con quel id
+    public Utente getUtente(@PathVariable int id){
+    	return utenteRepository.findById(id).get();
+    }
     
 }
