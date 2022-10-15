@@ -9,9 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Movie.EntitaDB.Sala;
 import com.example.Movie.EntitaDB.Utente;
 import com.example.Movie.entita.AllMovies;
 import com.example.Movie.entita.MovieDetails;
+import com.example.Movie.jpaRepository.CouponRepository;
+import com.example.Movie.jpaRepository.FilmRepository;
+import com.example.Movie.jpaRepository.SalaRepository;
+import com.example.Movie.jpaRepository.SpettacoloRepository;
+import com.example.Movie.jpaRepository.StoricoRepository;
 import com.example.Movie.jpaRepository.UtenteRepository;
 import com.example.Movie.servizi.AllMoviesService;
 import com.example.Movie.servizi.MovieDetailsService;
@@ -24,7 +30,18 @@ public class TheMovieDBController {
     @Autowired
     private AllMoviesService moviesService;
     @Autowired
-    UtenteRepository utenteRepository;
+	private UtenteRepository utenteRepository;
+    @Autowired
+	private StoricoRepository storicoRepository;
+    @Autowired
+	private SpettacoloRepository spettacoloRepository;
+    @Autowired
+	private SalaRepository salaRepository;
+    @Autowired
+	private FilmRepository filmRepository;
+    @Autowired
+	private CouponRepository couponRepository;
+
 
     @Autowired
     private MovieDetailsService detailsService;
@@ -55,5 +72,22 @@ public class TheMovieDBController {
     public Utente getUtente(@PathVariable int id){
     	return utenteRepository.findById(id).get();
     }
+    
+    @CrossOrigin(origins="*")
+    @GetMapping("/login/{utente}")//stavi facendo qui
+    public Utente setUtente(@PathVariable Utente utente){
+    	Utente	ut=utenteRepository.findByEmail(utente.getEmail());
+    	System.out.println(ut.toString());
+    	return null;
+    }
+    
+    @CrossOrigin(origins="*")
+    @GetMapping("/sala")//ritorna tutte le sale
+    public List<Sala> getSale(){
+    	return salaRepository.findAll();
+    }
+ 
+    
+    
     
 }
