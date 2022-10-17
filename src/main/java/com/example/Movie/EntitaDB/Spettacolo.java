@@ -3,6 +3,7 @@ package com.example.Movie.EntitaDB;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -15,27 +16,32 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.springframework.boot.context.properties.ConstructorBinding;
+
 import lombok.Data;
 
 @Data
 @Entity
 public class Spettacolo {
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id_spettacolo;
-	private Date dataSpettacolo;
-	private Time orario;
+	private LocalDate dataSpettacolo;
+	private String orario; //non so il perche'
 	private BigDecimal prezzoSpettacolo;
 	
+
 	//relazione utente * 1 
-	@ManyToOne
+	@ManyToMany
 	@JoinColumn(name = "id_utente")
-	private Utente utente;
+	private List<Utente> utente;
 	
 	
-	//relazione film * 1 
-	@ManyToOne
-	@JoinColumn(name="id_film")
+	//relazione film 1 1 
+	@OneToOne(mappedBy = "spettacolo")
+	//@JoinColumn(name="id_film")
+	//@OneToOne(mappedBy = "spettacolo")
 	private Film film;
 	
 	
@@ -45,8 +51,7 @@ public class Spettacolo {
 	private List<Sala> sala;
 	
 	
-	
-	
+
 	//relazione Coupon 1 a 1
 	@OneToOne(mappedBy = "spettacolo")
 	private Coupon coupon;
