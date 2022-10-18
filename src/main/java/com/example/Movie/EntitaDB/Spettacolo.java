@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,9 @@ import javax.persistence.OneToOne;
 
 import org.springframework.boot.context.properties.ConstructorBinding;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -56,6 +59,7 @@ public class Spettacolo {
 
 	//relazione Coupon 1 a 1
 	@OneToOne(mappedBy = "spettacolo")
+	@JsonManagedReference
 	private Coupon coupon;
 	
 	

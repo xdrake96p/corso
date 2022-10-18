@@ -10,6 +10,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 
 @Data
@@ -27,6 +31,7 @@ public class Coupon {
 	
 	//relazione spettacolo 1 1
 	@OneToOne
+	@JsonBackReference
 	@JoinTable(name = "coupon_spettacolo")
 	private Spettacolo spettacolo;
 }

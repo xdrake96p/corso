@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -56,7 +60,11 @@ public class TheMovieDBController {
 
 	@Autowired
 	private MovieDetailsService detailsService;
-
+	
+	@PersistenceContext
+	EntityManager manager;
+	
+	
 	@CrossOrigin(origins = "*")
 	@GetMapping("/moviesTypes/{name}") // http://localhost:8080/moviesTypes/top_rated /now_playing /popular /top_rated
 										// /upcoming
@@ -71,12 +79,39 @@ public class TheMovieDBController {
 		return detailsService.movieDetails(id);
 
 	}
-
+	@CrossOrigin(origins = "*")
 	@PostMapping("/search/{name}") // http://localhost:8080/search/street //restituisce una lista di film con quel
 									// nome iniziale
 	public AllMovies SearchingMovie(@PathVariable String name) {
 		return moviesService.searchingMovies(name);
 	}
+	
+	@CrossOrigin(origins = "*")
+	@PostMapping("/homefilm")
+	public List<Film> getFilmHome(){
+		return filmRepository.findAll();
+	}
+	
+	@CrossOrigin(origins = "*")
+	@GetMapping("/filminfo/{id}")
+	public List<Spettacolo> getInfoFilmDettaglio(@PathVariable int id){
+		List<Spettacolo> spetta= new ArrayList<>();
+		List<Film> a = filmRepository.findByidFilmApi(id);
+		Optional<Spettacolo> spettacoloso;
+		for(Film fi : a) {
+			spettacoloso=spettacoloRepository.findByFilm(fi);
+			if(spettacoloso.isPresent()) {
+				spetta.add(spettacoloso.get());
+			}
+		}
+		return spetta;
+	}
+
+	
+	
+	
+	
+	
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("/user") // ritorna tutti gli utenti
@@ -124,7 +159,7 @@ public class TheMovieDBController {
 		filmoso.setDurataFilm(m.getRuntime());
 		filmoso.setDescrizione(m.getOverview());
 		filmoso.setIdFilmApi((int) m.getId());
-		filmoso.setLocandina(m.getBackdrop_path());
+		filmoso.setLocandina(m.getPoster_path());
 		Spettacolo s = new Spettacolo();
 		s.setDataSpettacolo(filmRicevutoDaAngular.getData());
 		s.setOrario(filmRicevutoDaAngular.getOrario());
@@ -148,7 +183,8 @@ public class TheMovieDBController {
 	@CrossOrigin(origins = "*")
 	@GetMapping("/ritornaSpettacolo")
 	public List<Spettacolo> getSpettacolo() { // funziona forse lo miglioro
-		return spettacoloRepository.findAll();
+			return spettacoloRepository.findAll();
+		
 	}
 	
 	@CrossOrigin(origins = "*")
@@ -157,9 +193,10 @@ public class TheMovieDBController {
 			Coupon coupon= new Coupon();
 			coupon.setCodiceCoupon(id.getNomeCoupon());
 			coupon.setPercentualeSconto(id.getValoreCoupon());
-			coupon.setSpettacolo(spettacoloRepository.getById(id.getIdFIlmDaApplicareCoupon()));
+			Spettacolo s= spettacoloRepository.getById(id.getIdFIlmDaApplicareCoupon());
+			coupon.setSpettacolo(s);
 			couponRepository.save(coupon);
-			return new ResponseEntity<Object>(id, HttpStatus.OK);
+			return new ResponseEntity<Object>("", HttpStatus.OK);
 	}
 	
 
