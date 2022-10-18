@@ -1,7 +1,9 @@
 package com.example.Movie.Controller;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -100,24 +102,31 @@ public class TheMovieDBController {
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("/filminfo/{id}")
-	public Spettacolo getInfoFilmDettaglio(@PathVariable int id) {
-	/*	List<Spettacolo> spetta = new ArrayList<>();
+	public List<Spettacolo> getInfoFilmDettaglio(@PathVariable int id) {
+		/*List<Spettacolo> spetta = new ArrayList<>();
 		Optional<Film> a = filmRepository.findByidFilmApi(id);
 		Optional<Spettacolo> spettacoloso = java.util.Optional.empty();
 		if(a.isPresent()) {
 			spettacoloso= spettacoloRepository.findByFilm(a.get());
 			
-		/*for (Film fi : a) {
+		for (Film fi : a.get().) {
 			spettacoloso = spettacoloRepository.findByFilm(fi);
 			if (spettacoloso.isPresent()) {
 				spetta.add(spettacoloso.get());
 			}
 		}
 		}*/
+		
 	//	return spettacoloso.get();
-	return null;
+		Optional<Film> a = filmRepository.findByidFilmApi(id);
+		Film as=a.get();
+		List<Spettacolo> spettacoloso = spettacoloRepository.findByFilm(as);
+		
+		 return spettacoloso;
 		
 	}
+
+
 
 	@CrossOrigin(origins = "*")
 	@GetMapping("/user") // ritorna tutti gli utenti
@@ -170,7 +179,7 @@ public class TheMovieDBController {
 		s.setPrezzoSpettacolo(filmRicevutoDaAngular.getPrezzoBiglietto());
 		s.setFilm(filmoso.get());
 		spettacoloRepository.save(s);
-		}else {
+		}else {//il film non è presente nel db e quindi l aggiungo e creo anche l evento
 			Film a = new Film();
 			a.setNomeFilm(m.getOriginal_title());
 			a.setDurataFilm(m.getRuntime());
