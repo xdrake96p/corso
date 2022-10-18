@@ -37,10 +37,11 @@ public class Spettacolo {
 	private BigDecimal prezzoSpettacolo;
 	
 	//relazione film 1 1 
-	@OneToOne(mappedBy = "spettacolo")
-	//@JoinColumn(name="id_film")
-	//@OneToOne(mappedBy = "spettacolo")
-	private Film film;
+	//@OneToMany
+	@ManyToOne
+	@JoinColumn(name="spettacolo_film",referencedColumnName = "idFilm")
+	//@JoinColumn(name="spettacolo_film",referencedColumnName = "idFilm")
+	private  Film film;
 	
 	//relazione utente * 1 
 	@ManyToMany
