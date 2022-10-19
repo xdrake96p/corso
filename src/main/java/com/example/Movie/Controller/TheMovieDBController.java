@@ -104,21 +104,17 @@ public class TheMovieDBController {
 	@CrossOrigin(origins = "*")
 	@GetMapping("/filminfo/{id}")
 	public List<Spettacolo> getInfoFilmDettaglio(@PathVariable int id) {
-		/*
-		 * List<Spettacolo> spetta = new ArrayList<>(); Optional<Film> a =
-		 * filmRepository.findByidFilmApi(id); Optional<Spettacolo> spettacoloso =
-		 * java.util.Optional.empty(); if(a.isPresent()) { spettacoloso=
-		 * spettacoloRepository.findByFilm(a.get());
-		 * 
-		 * for (Film fi : a.get().) { spettacoloso =
-		 * spettacoloRepository.findByFilm(fi); if (spettacoloso.isPresent()) {
-		 * spetta.add(spettacoloso.get()); } } }
-		 */
-
-		// return spettacoloso.get();
 		Optional<Film> a = filmRepository.findByidFilmApi(id);
 		Film as = a.get();
 		List<Spettacolo> spettacoloso = spettacoloRepository.findByFilm(as);
+		List<Spettacolo> supporto= new ArrayList<>();
+		LocalDate now = LocalDate.now();
+		for(Spettacolo ciclo : spettacoloso) {
+			if(ciclo.getDataSpettacolo().isBefore(now)) {
+				supporto.add(ciclo);
+			}
+		}
+		spettacoloso.removeAll(supporto);
 
 		return spettacoloso;
 
@@ -160,8 +156,14 @@ public class TheMovieDBController {
 	@CrossOrigin(origins = "*")
 	@PostMapping("/registrazione")
 	public ResponseEntity<Object> registrazione(@RequestBody Utente u) { // mettere controllo dell email
-		utenteRepository.save(u);
+		Optional<Utente> i = Optional.ofNullable(utenteRepository.findByEmail(u.getEmail()));
+		if(i.isPresent()) {
+			return new ResponseEntity<Object>(u, HttpStatus.BAD_REQUEST);
+		}else {
+			utenteRepository.save(u);
 		return new ResponseEntity<Object>(u, HttpStatus.OK);
+		}
+		
 	}
 
 	@CrossOrigin(origins = "*")
