@@ -177,7 +177,10 @@ public class TheMovieDBController {
 		if (filmoso.isPresent()) {
 			Optional<Sala> sala= salaRepository.findById(filmRicevutoDaAngular.getSala());
 			
-			Sala salosa=sala.get();
+			Sala salosa=new Sala();
+				salosa.setNomeSala(sala.get().getNomeSala());
+				salosa.setPosti(sala.get().getPosti());
+				salosa.setPostiDisponibili(sala.get().getPostiDisponibili());
 			
 			Spettacolo s = new Spettacolo();
 			s.setDataSpettacolo(filmRicevutoDaAngular.getData());
@@ -191,7 +194,10 @@ public class TheMovieDBController {
 		} else {// il film non è presente nel db e quindi l aggiungo e creo anche l evento
 			Film a = new Film();
 			Optional<Sala> sala= salaRepository.findById(filmRicevutoDaAngular.getSala());
-			Sala salosa=sala.get();
+			Sala salosa=new Sala();
+			salosa.setNomeSala(sala.get().getNomeSala());
+			salosa.setPosti(sala.get().getPosti());
+			salosa.setPostiDisponibili(sala.get().getPostiDisponibili());
 			a.setNomeFilm(m.getOriginal_title());
 			a.setDurataFilm(m.getRuntime());
 			a.setDescrizione(m.getOverview());
