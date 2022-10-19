@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class Film {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer idFilm;
 	private String nomeFilm;
+	@Column(length = 9999)
 	private String Descrizione;
 	private short DurataFilm;
 	private String locandina;

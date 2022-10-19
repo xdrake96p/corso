@@ -36,6 +36,7 @@ import com.example.Movie.EntitaDB.Utente;
 import com.example.Movie.entita.AllMovies;
 import com.example.Movie.entita.FilmRicevutoDaAngular;
 import com.example.Movie.entita.MovieDetails;
+import com.example.Movie.entita.SalaCreazione;
 import com.example.Movie.entita.utenteLoggato;
 import com.example.Movie.jpaRepository.CouponRepository;
 import com.example.Movie.jpaRepository.FilmRepository;
@@ -174,14 +175,23 @@ public class TheMovieDBController {
 		Optional<Film> filmoso = filmRepository.findByidFilmApi(filmRicevutoDaAngular.getId());
 
 		if (filmoso.isPresent()) {
+			Optional<Sala> sala= salaRepository.findById(filmRicevutoDaAngular.getSala());
+			
+			Sala salosa=sala.get();
+			
 			Spettacolo s = new Spettacolo();
 			s.setDataSpettacolo(filmRicevutoDaAngular.getData());
 			s.setOrario(filmRicevutoDaAngular.getOrario());
 			s.setPrezzoSpettacolo(filmRicevutoDaAngular.getPrezzoBiglietto());
 			s.setFilm(filmoso.get());
 			spettacoloRepository.save(s);
+			salosa.setSpettacolo(s);
+			salaRepository.save(salosa);
+			
 		} else {// il film non è presente nel db e quindi l aggiungo e creo anche l evento
 			Film a = new Film();
+			Optional<Sala> sala= salaRepository.findById(filmRicevutoDaAngular.getSala());
+			Sala salosa=sala.get();
 			a.setNomeFilm(m.getOriginal_title());
 			a.setDurataFilm(m.getRuntime());
 			a.setDescrizione(m.getOverview());
@@ -194,7 +204,8 @@ public class TheMovieDBController {
 			s.setPrezzoSpettacolo(filmRicevutoDaAngular.getPrezzoBiglietto());
 			s.setFilm(a);
 			spettacoloRepository.save(s);
-
+			salosa.setSpettacolo(s);
+			salaRepository.save(salosa);
 		}
 		return new ResponseEntity<Object>("", HttpStatus.OK);
 
@@ -225,6 +236,24 @@ public class TheMovieDBController {
 		coupon.setSpettacolo(s);
 		couponRepository.save(coupon);
 		return new ResponseEntity<Object>("", HttpStatus.OK);
+	}
+	
+	@CrossOrigin(origins = "*")
+	@PostMapping("/inserisciSala")
+	public ResponseEntity<Object> addSala(@RequestBody SalaCreazione sala) {// sembra che funziona
+		System.out.println(sala);
+		Optional<Sala>optional = salaRepository.findBynomeSala(sala.getNome());
+		if(optional.isPresent()) {
+			return new ResponseEntity<Object>(sala, HttpStatus.BAD_GATEWAY);
+		}else {
+			Sala salosa= new Sala();
+			salosa.setNomeSala(sala.getNome());
+			salosa.setPosti(sala.getNumerSala());
+			salosa.setPostiDisponibili(sala.getNumerSala());
+			
+			salaRepository.save(salosa);
+		}
+		return new ResponseEntity<Object>(sala, HttpStatus.OK);
 	}
 
 }

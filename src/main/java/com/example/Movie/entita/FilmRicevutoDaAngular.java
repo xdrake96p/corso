@@ -11,7 +11,7 @@ public class FilmRicevutoDaAngular {
 	private int id;
 	private LocalDate data;
 	private String orario;
-	private String sala;
+	private int sala;
 	private BigDecimal prezzoBiglietto;
 
 }

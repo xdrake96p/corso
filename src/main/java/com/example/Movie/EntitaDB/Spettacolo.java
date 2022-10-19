@@ -51,7 +51,8 @@ public class Spettacolo {
 	
 	
 	//relazione con sala 1 *
-	@OneToMany
+	@OneToMany(mappedBy="spettacolo")
+	@JsonIgnore
 	private List<Sala> sala;
 	
 	
