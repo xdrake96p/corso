@@ -36,11 +36,9 @@ public class Spettacolo {
 	private String orario; //non so il perche'
 	private BigDecimal prezzoSpettacolo;
 	
-	//relazione film 1 1 
-	//@OneToMany
+	//relazione film * 1 
 	@ManyToOne
 	@JoinColumn(name="spettacolo_film",referencedColumnName = "idFilm")
-	//@JoinColumn(name="spettacolo_film",referencedColumnName = "idFilm")
 	private  Film film;
 	
 	//relazione utente * 1 
